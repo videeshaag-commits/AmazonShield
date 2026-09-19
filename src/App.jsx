@@ -1090,81 +1090,104 @@ function Result({ result, setPage }) {
 }
 
 function History() {
+  const [filter, setFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const history = [
     {
-      content: "Urgent! Your bank account is...",
-      type: "Text",
+      id: 1,
+      content: "Congratulations! You won a ₹50,000 prize...",
+      type: "Text Message",
       result: "Suspicious",
       score: 92,
-      date: "Sep 19, 2026",
-      time: "11:23 AM",
+      date: "Today",
+      time: "10:30 AM",
     },
     {
-      content: "Your OTP for Amazon is 482193...",
-      type: "Text",
+      id: 2,
+      content: "Your Amazon order has been shipped successfully.",
+      type: "Text Message",
+      result: "Safe",
+      score: 8,
+      date: "Today",
+      time: "9:15 AM",
+    },
+    {
+      id: 3,
+      content: "Your bank account will be blocked. Verify immediately.",
+      type: "Text Message",
+      result: "Suspicious",
+      score: 87,
+      date: "Yesterday",
+      time: "6:42 PM",
+    },
+    {
+      id: 4,
+      content: "Your appointment has been confirmed.",
+      type: "Email",
       result: "Safe",
       score: 5,
-      date: "Sep 19, 2026",
-      time: "10:45 AM",
-    },
-    {
-      content: "http://free-gift-card.com",
-      type: "URL",
-      result: "Suspicious",
-      score: 88,
-      date: "Sep 18, 2026",
-      time: "06:32 PM",
-    },
-    {
-      content: "Congratulations! You won a prize...",
-      type: "Text",
-      result: "Suspicious",
-      score: 76,
-      date: "Sep 18, 2026",
-      time: "05:11 PM",
-    },
-    {
-      content: "Meeting at 5 PM. Please confirm.",
-      type: "Text",
-      result: "Safe",
-      score: 3,
-      date: "Sep 17, 2026",
-      time: "09:20 AM",
+      date: "Yesterday",
+      time: "2:20 PM",
     },
   ];
 
+  const filteredHistory = history.filter((item) => {
+    const matchesFilter =
+      filter === "all" || item.result.toLowerCase() === filter;
+
+    const matchesSearch = item.content
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    return matchesFilter && matchesSearch;
+  });
+
+  const handleView = (item) => {
+    alert(
+      `${item.result} Result\n\n` +
+        `Risk Score: ${item.score}/100\n\n` +
+        `Type: ${item.type}\n\n` +
+        `${item.content}`
+    );
+  };
+
   return (
     <div className="history-page">
-
       <div className="history-header">
-
         <div>
           <h1>Your Analysis History</h1>
           <p>View and manage your past scans.</p>
         </div>
 
         <div className="history-tools">
-
           <div className="search-box">
             <SearchIcon />
-            <input placeholder="Search messages..." />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search messages..."
+            />
           </div>
 
-          <select>
-            <option>All Results</option>
-            <option>Safe</option>
-            <option>Suspicious</option>
-          </select>
-
+          <div className="filter-dropdown">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="history-filter"
+              aria-label="Filter analysis results"
+            >
+              <option value="all">All Results</option>
+              <option value="safe">Safe</option>
+              <option value="suspicious">Suspicious</option>
+            </select>
+          </div>
         </div>
-
       </div>
 
       <div className="history-table-wrapper">
-
         <table>
-
           <thead>
             <tr>
               <th>#</th>
@@ -1178,63 +1201,59 @@ function History() {
           </thead>
 
           <tbody>
-
-            {history.map((item, index) => (
-
-              <tr key={index}>
-
-                <td>{index + 1}</td>
-
-                <td>{item.content}</td>
-
-                <td>{item.type}</td>
-
-                <td>
-                  <span
+            {filteredHistory.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="no-results">
+                  No results found.
+                </td>
+              </tr>
+            ) : (
+              filteredHistory.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>{item.content}</td>
+                  <td>{item.type}</td>
+                  <td>
+                    <span
+                      className={
+                        item.result === "Safe"
+                          ? "status safe-status"
+                          : "status danger-status"
+                      }
+                    >
+                      {item.result === "Safe" ? "✓" : "!"}
+                      &nbsp;
+                      {item.result}
+                    </span>
+                  </td>
+                  <td
                     className={
-                      item.result === "Safe"
-                        ? "status safe-status"
-                        : "status danger-status"
+                      item.score > 50 ? "high-score" : "low-score"
                     }
                   >
-                    {item.result === "Safe" ? "✓" : "!"}
-                    &nbsp;
-                    {item.result}
-                  </span>
-                </td>
-
-                <td
-                  className={
-                    item.score > 50
-                      ? "high-score"
-                      : "low-score"
-                  }
-                >
-                  {item.score}
-                </td>
-
-                <td>
-                  {item.date}
-                  <br />
-                  <small>{item.time}</small>
-                </td>
-
-                <td>
-                  <button className="eye-button">
-                    <EyeIcon />
-                  </button>
-                </td>
-
-              </tr>
-
-            ))}
-
+                    {item.score}/100
+                  </td>
+                  <td>
+                    {item.date}
+                    <br />
+                    <small>{item.time}</small>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="eye-button"
+                      onClick={() => handleView(item)}
+                      aria-label={`View ${item.result} result`}
+                    >
+                      <EyeIcon />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
-
         </table>
-
       </div>
-
     </div>
   );
 }
