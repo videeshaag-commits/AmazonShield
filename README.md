@@ -1,42 +1,74 @@
-# AmazonShield Backend
+# 🛡️ AmazonShield
 
-Complete backend matching the AmazonShield frontend flow.
+AI-powered phishing and scam detection system that analyzes suspicious messages, URLs, and uploaded files and provides a risk score, threat indicators, and safety recommendations.
 
-## Install
+## 🚀 Features
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
-uvicorn app:app --reload
-```
+- 🔍 Analyze suspicious messages
+- 🤖 AI-powered threat investigation
+- 📊 Rule-based risk scoring
+- 🚨 Red-flag detection
+- 🔗 Suspicious URL detection
+- 📁 File/screenshot analysis
+- ☁️ AWS integration
+- 🧠 Amazon Bedrock integration
+- 🛡️ AWS Guardrails
+- 🗄️ Amazon S3 support
+- 📦 DynamoDB support
+- 📜 Analysis history
+- ⚡ FastAPI backend
+- 🌐 React frontend
 
-Open http://127.0.0.1:8000/docs
+---
 
-## Endpoints
+## 🏗️ Project Structure
 
-POST /investigate
-POST /investigate/file
-GET /history
-GET /history/{investigation_id}
-GET /health
-
-## Risk engine
-
-Payment request +25
-Urgency +15
-Credential request +25
-Impersonation +15
-Suspicious URL +10
-
-LOW: 0-29
-MEDIUM: 30-59
-HIGH: 60-79
-CRITICAL: 80-100
-
-The final score is calculated by Python, not invented by the LLM.
-The five configured weights total a maximum of 90.
-
-AWS Bedrock is optional during local development. Configure it after
-the local API is working. Never commit .env or AWS credentials.
+```text
+AmazonShield/
+│
+├── frontend/
+│
+└── backend/
+    │
+    ├── app.py
+    ├── config.py
+    ├── requirements.txt
+    ├── .env
+    ├── .env.example
+    ├── .gitignore
+    ├── README.md
+    │
+    ├── api/
+    │   ├── __init__.py
+    │   └── routes.py
+    │
+    ├── models/
+    │   ├── __init__.py
+    │   └── schemas.py
+    │
+    ├── core/
+    │   ├── __init__.py
+    │   ├── risk_engine.py
+    │   └── history_store.py
+    │
+    ├── services/
+    │   ├── __init__.py
+    │   ├── ai_service.py
+    │   ├── bedrock_service.py
+    │   ├── file_service.py
+    │   ├── s3_service.py
+    │   ├── dynamodb_service.py
+    │   └── aws_services.py
+    │
+    ├── utils/
+    │   ├── __init__.py
+    │   ├── prompts.py
+    │   └── helpers.py
+    │
+    ├── tests/
+    │   ├── __init__.py
+    │   ├── test_api.py
+    │   └── test_risk_engine.py
+    │
+    └── uploads/
+        └── .gitkeep
