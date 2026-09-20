@@ -1,74 +1,95 @@
-# 🛡️ AmazonShield
+# AmazonShield
 
-AI-powered phishing and scam detection system that analyzes suspicious messages, URLs, and uploaded files and provides a risk score, threat indicators, and safety recommendations.
+AmazonShield is a student hackathon prototype that uses a Strands-based
+AI agent to investigate suspicious messages and explain possible phishing
+or scam indicators.
 
-## 🚀 Features
-
-- 🔍 Analyze suspicious messages
-- 🤖 AI-powered threat investigation
-- 📊 Rule-based risk scoring
-- 🚨 Red-flag detection
-- 🔗 Suspicious URL detection
-- 📁 File/screenshot analysis
-- ☁️ AWS integration
-- 🧠 Amazon Bedrock integration
-- 🛡️ AWS Guardrails
-- 🗄️ Amazon S3 support
-- 📦 DynamoDB support
-- 📜 Analysis history
-- ⚡ FastAPI backend
-- 🌐 React frontend
-
----
-
-## 🏗️ Project Structure
+## Project structure
 
 ```text
 AmazonShield/
-│
-├── frontend/
-│
-└── backend/
-    │
-    ├── app.py
-    ├── config.py
-    ├── requirements.txt
-    ├── .env
-    ├── .env.example
-    ├── .gitignore
-    ├── README.md
-    │
-    ├── api/
-    │   ├── __init__.py
-    │   └── routes.py
-    │
-    ├── models/
-    │   ├── __init__.py
-    │   └── schemas.py
-    │
-    ├── core/
-    │   ├── __init__.py
-    │   ├── risk_engine.py
-    │   └── history_store.py
-    │
-    ├── services/
-    │   ├── __init__.py
-    │   ├── ai_service.py
-    │   ├── bedrock_service.py
-    │   ├── file_service.py
-    │   ├── s3_service.py
-    │   ├── dynamodb_service.py
-    │   └── aws_services.py
-    │
-    ├── utils/
-    │   ├── __init__.py
-    │   ├── prompts.py
-    │   └── helpers.py
-    │
-    ├── tests/
-    │   ├── __init__.py
-    │   ├── test_api.py
-    │   └── test_risk_engine.py
-    │
-    └── uploads/
-        └── .gitkeep
+├── agent.py
+├── api.py
+├── tools.py
+├── prompts.py
+├── requirements.txt
+├── .env.example
+├── .gitignore
+└── README.md
+```
+
+## 1. Create a virtual environment
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks activation, you can still run:
+
+```powershell
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+## 2. Install dependencies
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+## 3. Configure AWS
+
+Install/configure the AWS CLI and use your normal AWS credentials.
+
+Example:
+
+```powershell
+aws configure
+```
+
+Set the region in `.env` or your shell, for example:
+
+```text
+AWS_REGION=us-east-1
+```
+
+Never commit credentials to GitHub.
+
+## 4. Test the agent
+
+```powershell
+python agent.py
+```
+
+Then enter a test message such as:
+
+```text
+URGENT! Your bank account is suspended. Click http://example.com to verify your OTP.
+```
+
+## 5. Start the API
+
+```powershell
+uvicorn api:app --reload
+```
+
+API endpoint:
+
+```text
+POST /investigate
+```
+
+Request:
+
+```json
+{
+  "message": "Suspicious message here"
+}
+```
+
+## Important
+
+This is a prototype. The URL tool performs structural checks only; it is
+not a malware scanner or a guarantee that a URL is safe or malicious.
